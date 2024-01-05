@@ -55,6 +55,11 @@ type Identifier struct {
 	Value string
 }
 
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
 type ReturnStatement struct {
 	Token       token.Token
 	ReturnValue Expression
@@ -91,6 +96,14 @@ func (i *Identifier) TokenLiteral() string {
 }
 func (i *Identifier) String() string {
 	return i.Value
+}
+
+func (il *IntegerLiteral) expressionNode() {}
+func (il *IntegerLiteral) TokenLiteral() string {
+	return il.Token.Literal
+}
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
 }
 
 func (rs *ReturnStatement) statementNode() {}
