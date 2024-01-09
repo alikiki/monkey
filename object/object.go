@@ -23,11 +23,16 @@ type ReturnValue struct {
 
 type Null struct{}
 
+type Error struct {
+	Message string
+}
+
 const (
 	INTEGER_OBJ      = "INTEGER"
 	BOOLEAN_OBJ      = "BOOLEAN"
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	ERROR_OBJ        = "ERROR"
 )
 
 func (i *Integer) Type() ObjectType { return INTEGER_OBJ }
@@ -48,4 +53,9 @@ func (n *Null) Inspect() string {
 func (rv *ReturnValue) Type() ObjectType { return RETURN_VALUE_OBJ }
 func (rv *ReturnValue) Inspect() string {
 	return rv.Value.Inspect()
+}
+
+func (e *Error) Type() ObjectType { return ERROR_OBJ }
+func (e *Error) Inspect() string {
+	return "ERROR: " + e.Message
 }
