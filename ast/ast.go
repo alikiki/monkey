@@ -61,6 +61,11 @@ type IntegerLiteral struct {
 	Value int64
 }
 
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
 type ReturnStatement struct {
 	Token       token.Token
 	ReturnValue Expression
@@ -107,6 +112,11 @@ type FunctionLiteral struct {
 	Body       *BlockStatement
 }
 
+type ArrayLiteral struct {
+	Token    token.Token
+	Elements []Expression
+}
+
 type CallExpression struct {
 	Token     token.Token
 	Function  Expression
@@ -147,6 +157,14 @@ func (il *IntegerLiteral) TokenLiteral() string {
 }
 func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
+}
+
+func (sl *StringLiteral) expressionNode() {}
+func (sl *StringLiteral) TokenLiteral() string {
+	return sl.Token.Literal
+}
+func (sl *StringLiteral) String() string {
+	return sl.Token.Literal
 }
 
 func (rs *ReturnStatement) statementNode() {}
@@ -259,6 +277,23 @@ func (fl *FunctionLiteral) String() string {
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(")")
 	out.WriteString(fl.Body.String())
+
+	return out.String()
+}
+
+func (al *ArrayLiteral) expressionNode()      {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
 
 	return out.String()
 }
