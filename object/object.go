@@ -8,6 +8,7 @@ import (
 )
 
 type ObjectType string
+type BuiltinFunction func(args ...Object) Object
 
 type Object interface {
 	Type() ObjectType
@@ -36,6 +37,14 @@ type Function struct {
 	Env        *Environment
 }
 
+type Array struct {
+	Elements []Object
+}
+
+type Builtin struct {
+	Fn BuiltinFunction
+}
+
 type Null struct{}
 
 type Error struct {
@@ -50,6 +59,8 @@ const (
 	ERROR_OBJ        = "ERROR"
 	FUNCTION_OBJ     = "FUNCTION"
 	STRING_OBJ       = "STRING"
+	ARRAY_OBJ        = "ARRAY"
+	BUILTIN_OBJ      = "BUILTIN"
 )
 
 func (i *Integer) Type() ObjectType { return INTEGER_OBJ }
@@ -99,4 +110,25 @@ func (f *Function) Inspect() string {
 	out.WriteString("\n}")
 
 	return out.String()
+}
+
+func (a *Array) Type() ObjectType { return ARRAY_OBJ }
+func (a *Array) Inspect() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, e := range a.Elements {
+		elements = append(elements, e.Inspect())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
+}
+
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
+func (b *Builtin) Inspect() string {
+	return "builtin function"
 }
